@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopEase - Neubrutalism E-Commerce</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FF5252",
+                        secondary: "#FFDE59",
+                        accent: "#4DAAFF",
+                        dark: "#1A1A1A"
+                    },
+                    boxShadow: {
+                        'neu': '4px 4px 0 0 #1A1A1A',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .neu-border {
+            border: 3px solid #1A1A1A;
+        }
+        .neu-shadow {
+            box-shadow: 4px 4px 0 0 #1A1A1A;
+        }
+        .neu-button:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0 0 #1A1A1A;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-yellow-50 overflow-x-hidden">
+    <!-- Navigation -->
+    <nav class="bg-white neu-border fixed w-full top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="#" class="text-2xl font-bold text-primary">ShopEase</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="nav-link active" onclick="showPanel('userPanel')">Home</a>
+                    <a href="#" class="nav-link" onclick="showModal('categoriesModal')">Categories</a>
+                    <a href="#" class="nav-link" onclick="showPanel('orderHistoryPanel')">Orders</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="searchBtn" class="p-2" onclick="showModal('searchModal')">
+                        <i class="bi bi-search text-xl"></i>
+                    </button>
+                    <button id="cartBtn" class="relative p-2">
+                        <i class="bi bi-cart text-xl"></i>
+                        <span class="absolute -top-1 -right-1 bg-primary text-white neu-border rounded-full w-5 h-5 text-xs flex items-center justify-center" id="cartCount">0</span>
+                    </button>
+                    <button id="wishlistBtn" class="p-2" onclick="showPanel('wishlistPanel')">
+                        <i class="bi bi-heart text-xl"></i>
+                    </button>
+                    <button id="accountBtn" class="p-2" onclick="showModal('accountModal')">
+                        <i class="bi bi-person-circle text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Bottom Navigation -->
+    <div class="md:hidden fixed bottom-0 left-0 w-full bg-white neu-border z-50">
+        <div class="flex justify-between p-3">
+            <button onclick="showPanel('userPanel')" class="flex flex-col items-center">
+                <i class="bi bi-house text-xl"></i>
+                <span class="text-xs">Home</span>
+            </button>
+            <button onclick="showModal('categoriesModal')" class="flex flex-col items-center">
+                <i class="bi bi-grid text-xl"></i>
+                <span class="text-xs">Categories</span>
+            </button>
+            <button onclick="showPanel('wishlistPanel')" class="flex flex-col items-center">
+                <i class="bi bi-heart text-xl"></i>
+                <span class="text-xs">Wishlist</span>
+            </button>
+            <button onclick="showPanel('orderHistoryPanel')" class="flex flex-col items-center">
+                <i class="bi bi-bag text-xl"></i>
+                <span class="text-xs">Orders</span>
+            </button>
+            <button onclick="showModal('accountModal')" class="flex flex-col items-center">
+                <i class="bi bi-person text-xl"></i>
+                <span class="text-xs">Account</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="pt-20 pb-24 md:pb-8 px-4">
+        <!-- User Panel (Home) -->
+        <div id="userPanel" class="max-w-7xl mx-auto">
+            <!-- Hero Banner -->
+            <div class="mb-6 bg-accent neu-border neu-shadow rounded-lg p-6 relative">
+                <div class="md:w-2/3">
+                    <h1 class="text-3xl md:text-4xl font-bold mb-2">Summer Sale!</h1>
+                    <p class="text-lg mb-4">Up to 50% off on all products</p>
+                    <button class="bg-primary text-white neu-border neu-shadow neu-button px-6 py-2 font-bold transition-all">Shop Now</button>
+                </div>
+                <div class="absolute bottom-0 right-0 opacity-50 md:opacity-100">
+                    <img src="https://source.unsplash.com/random/300x300/?shopping" class="h-32 md:h-48 object-contain" alt="Sale">
+                </div>
+            </div>
+            
+            <!-- Categories -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Categories</h2>
+                    <a href="#" class="text-primary font-bold" onclick="showModal('categoriesModal')">See All <i class="bi bi-arrow-right"></i></a>
+                </div>
+                <div class="grid grid-cols-4 gap-4">
+                    <div class="bg-secondary neu-border neu-shadow rounded-lg p-3 text-center neu-button transition-all">
+                        <i class="bi bi-phone text-2xl"></i>
+                        <p class="text-sm mt-2">Electronics</p>
+                    </div>
+                    <div class="bg-accent neu-border neu-shadow rounded-lg p-3 text-center neu-button transition-all">
+                        <i class="bi bi-shirt text-2xl"></i>
+                        <p class="text-sm mt-2">Fashion</p>
+                    </div>
+                    <div class="bg-primary neu-border neu-shadow rounded-lg p-3 text-center neu-button transition-all">
+                        <i class="bi bi-house text-2xl"></i>
+                        <p class="text-sm mt-2">Home</p>
+                    </div>
+                    <div class="bg-green-400 neu-border neu-shadow rounded-lg p-3 text-center neu-button transition-all">
+                        <i class="bi bi-basket text-2xl"></i>
+                        <p class="text-sm mt-2">Grocery</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Products -->
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold">Trending Products</h2>
+                </div>
+                <div id="productsList" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- Products will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Wishlist Panel -->
+        <div id="wishlistPanel" class="max-w-7xl mx-auto hidden">
+            <h2 class="text-2xl font-bold mb-6">Your Wishlist</h2>
+            <div id="wishlistItems" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <!-- Wishlist items will be inserted here -->
+                <div class="text-center p-8 col-span-full text-gray-500">
+                    Your wishlist is empty
+                </div>
+            </div>
+        </div>
+
+        <!-- Order History Panel -->
+        <div id="orderHistoryPanel" class="max-w-7xl mx-auto hidden">
+            <h2 class="text-2xl font-bold mb-6">Your Orders</h2>
+            <div id="ordersList" class="space-y-4">
+                <!-- Order items will be inserted here -->
+                <div class="bg-white neu-border neu-shadow p-4 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <span class="font-bold">Order #45678</span>
+                            <span class="ml-2 text-sm text-gray-500">June 12, 2023</span>
+                        </div>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Delivered</span>
+                    </div>
+                    <div class="flex mb-3 items-center">
+                        <img src="https://source.unsplash.com/random/100x100/?smartphone" class="w-16 h-16 object-cover rounded mr-3" alt="Product">
+                        <div>
+                            <p class="font-medium">Smartphone X Pro</p>
+                            <p class="text-gray-600">$699.99</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button class="bg-accent text-dark neu-border neu-shadow neu-button px-4 py-1 text-sm font-bold transition-all">Track Order</button>
+                        <button class="bg-secondary text-dark neu-border neu-shadow neu-button px-4 py-1 text-sm font-bold transition-all">Buy Again</button>
+                    </div>
+                </div>
+                
+                <div class="bg-white neu-border neu-shadow p-4 rounded-lg">
+                    <div class="flex justify-between items-center mb-2">
+                        <div>
+                            <span class="font-bold">Order #45612</span>
+                            <span class="ml-2 text-sm text-gray-500">May 28, 2023</span>
+                        </div>
+                        <span class="bg-green-100 text-green-800 px-2 py-1 rounded text-sm">Delivered</span>
+                    </div>
+                    <div class="flex mb-3 items-center">
+                        <img src="https://source.unsplash.com/random/100x100/?headphones" class="w-16 h-16 object-cover rounded mr-3" alt="Product">
+                        <div>
+                            <p class="font-medium">Wireless Headphones</p>
+                            <p class="text-gray-600">$129.99</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between">
+                        <button class="bg-white text-dark neu-border neu-shadow neu-button px-4 py-1 text-sm font-bold transition-all">View Details</button>
+                        <button class="bg-secondary text-dark neu-border neu-shadow neu-button px-4 py-1 text-sm font-bold transition-all">Buy Again</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel -->
+        <div id="adminPanel" class="max-w-7xl mx-auto hidden">
+            <div class="bg-white neu-border neu-shadow p-6 rounded-lg mb-6">
+                <h2 class="text-2xl font-bold mb-4">Admin Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-accent neu-border neu-shadow p-6 rounded-lg">
+                        <h3 class="text-xl font-bold">Products</h3>
+                        <p class="text-3xl font-bold">342</p>
+                    </div>
+                    <div class="bg-primary neu-border neu-shadow p-6 rounded-lg text-white">
+                        <h3 class="text-xl font-bold">Orders</h3>
+                        <p class="text-3xl font-bold">156</p>
+                    </div>
+                    <div class="bg-secondary neu-border neu-shadow p-6 rounded-lg">
+                        <h3 class="text-xl font-bold">Users</h3>
+                        <p class="text-3xl font-bold">2,145</p>
+                    </div>
+                </div>
+                <button id="addProductBtn" class="bg-green-400 text-dark neu-border neu-shadow neu-button px-6 py-2 font-bold transition-all mb-4" onclick="showModal('addProductModal')">
+                    <i class="bi bi-plus"></i> Add New Product
+                </button>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="text-left p-2 border-b-2 border-gray-300">ID</th>
+                                <th class="text-left p-2 border-b-2 border-gray-300">Product</th>
+                                <th class="text-left p-2 border-b-2 border-gray-300">Price</th>
+                                <th class="text-left p-2 border-b-2 border-gray-300">Stock</th>
+                                <th class="text-left p-2 border-b-2 border-gray-300">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminProductsList">
+                            <!-- Admin products will be inserted here -->
+                            <tr>
+                                <td class="p-2 border-b border-gray-200">1</td>
+                                <td class="p-2 border-b border-gray-200">Smartphone</td>
+                                <td class="p-2 border-b border-gray-200">$499.99</td>
+                                <td class="p-2 border-b border-gray-200">24</td>
+                                <td class="p-2 border-b border-gray-200">
+                                    <button class="bg-accent text-dark neu-border neu-shadow neu-button px-2 py-1 text-sm font-bold transition-all mr-2">Edit</button>
+                                    <button class="bg-primary text-white neu-border neu-shadow neu-button px-2 py-1 text-sm font-bold transition-all">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 border-b border-gray-200">2</td>
+                                <td class="p-2 border-b border-gray-200">Laptop</td>
+                                <td class="p-2 border-b border-gray-200">$999.99</td>
+                                <td class="p-2 border-b border-gray-200">12</td>
+                                <td class="p-2 border-b border-gray-200">
+                                    <button class="bg-accent text-dark neu-border neu-shadow neu-button px-2 py-1 text-sm font-bold transition-all mr-2">Edit</button>
+                                    <button class="bg-primary text-white neu-border neu-shadow neu-button px-2 py-1 text-sm font-bold transition-all">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seller Panel -->
+        <div id="sellerPanel" class="max-w-7xl mx-auto hidden">
+            <div class="bg-white neu-border neu-shadow p-6 rounded-lg mb-6">
+                <h2 class="text-2xl font-bold mb-4">Seller Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-accent neu-border neu-shadow p-6 rounded-lg">
+                        <h3 class="text-xl font-bold">Products</h3>
+                        <p class="text-3xl font-bold">28</p>
+                    </div>
+                    <div class="bg-primary neu-border neu-shadow p-6 rounded-lg text-white">
+                        <h3 class="text-xl font-bold">Orders</h3>
+                        <p class="text-3xl font-bold">42</p>
+                    </div>
+                    <div class="bg-secondary neu-border neu-shadow p-6 rounded-lg">
+                        <h3 class="text-xl font-bold">Revenue</h3>
+                        <p class="text-3xl font-bold">$4,249</p>
+                    </div>
+                </div>
+                <button id="sellerAddProductBtn" class="bg-green-400 text-dark neu-border neu-shadow neu-button px-6 py-2 font-bold transition-all mb-4" onclick="showModal('addProductModal')">
+                    <i class="bi bi-plus"></i> Add New Product
+                </button>
+                <div class="overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <thead>
+                            <tr>
+                                <th class="text-left p-2 border-b-2 border-gray-300">ID</th>
+                                <th class="text-left p-2 border-b-2 border-gray-300">Product</th>
+                                <th class="text-left p-2 border-b-2 border-gray-300">Price</th>
+                                <th class="text-left p-2 border-b-2 border-gray-300">Stock</th>
+                                <th class="text-left p-2 border-b-2 border-gray-300">Sales</th>
+                                <th class="text-left p-2 border-b-2 border-gray-300">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sellerProductsList">
+                            <!-- Seller products will be inserted here -->
+                            <tr>
+                                <td class="p-2 border-b border-gray-200">1</td>
+                                <td class="p-2 border-b border-gray-200">Handcrafted Wallet</td>
+                                <td class="p-2 border-b border-gray-200">$49.99</td>
+                                <td class="p-2 border-b border-gray-200">15</td>
+                                <td class="p-2 border-b border-gray-200">8</td>
+                                <td class="p-2 border-b border-gray-200">
+                                    <button class="bg-accent text-dark neu-border neu-shadow neu-button px-2 py-1 text-sm font-bold transition-all mr-2">Edit</button>
+                                    <button class="bg-primary text-white neu-border neu-shadow neu-button px-2 py-1 text-sm font-bold transition-all">Delete</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 border-b border-gray-200">2</td>
+                                <td class="p-2 border-b border-gray-200">Canvas Backpack</td>
+                                <td class="p-2 border-b border-gray-200">$89.99</td>
+                                <td class="p-2 border-b border-gray-200">7</td>
+                                <td class="p-2 border-b border-gray-200">12</td>
+                                <td class="p-2 border-b border-gray-200">
+                                    <button class="bg-accent text-dark neu-border neu-shadow neu-button px-2 py-1 text-sm font-bold transition-all mr-2">Edit</button>
+                                    <button class="bg-primary text-white neu-border neu-shadow neu-button px-2 py-1 text-sm font-bold transition-all">Delete</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Delivery Partner Panel -->
+        <div id="deliveryPanel" class="max-w-7xl mx-auto hidden">
+            <div class="bg-white neu-border neu-shadow p-6 rounded-lg mb-6">
+                <h2 class="text-2xl font-bold mb-4">Delivery Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-accent neu-border neu-shadow p-6 rounded-lg">
+                        <h3 class="text-xl font-bold">Assigned</h3>
+                        <p class="text-3xl font-bold">5</p>
+                    </div>
+                    <div class="bg-green-400 neu-border neu-shadow p-6 rounded-lg">
+                        <h3 class="text-xl font-bold">Delivered</h3>
+                        <p class="text-3xl font-bold">28</p>
+                    </div>
+                    <div class="bg-primary neu-border neu-shadow p-6 rounded-lg text-white">
+                        <h3 class="text-xl font-bold">Today's Tasks</h3>
+                        <p class="text-3xl font-bold">3</p>
+                    </div>
+                </div>
+                <h3 class="text-xl font-bold mb-4">Pending Deliveries</h3>
+                <div id="deliveryOrders" class="space-y-4">
+                    <!-- Delivery orders will be inserted here -->
+                    <div class="bg-white neu-border neu-shadow p-4 rounded-lg">
+                        <div class="flex justify-between items-center mb-2">
+                            <div>
+                                <span class="font-bold">Order #45692</span>
+                                <span class="ml-2 text-sm text-gray-500">Today, 10:30 AM</span>
+                            </div>
+                            <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">In Transit</span>
+                        </div>
+                        <div class="flex mb-3 items-center">
+                            <div class="mr-3 bg-primary neu-border rounded-full w-12 h-12 flex items-center justify-center text-white">
+                                <i class="bi bi-geo-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">123 Main St, Apt 4B</p>
+                                <p class="text-gray-600">New York, NY 10001</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="bg-accent text-dark neu-border neu-shadow neu-button px-4 py-1 font-bold transition-all">Navigate</button>
+                            <div class="space-x-2">
+                                <button class="bg-green-400 text-dark neu-border neu-shadow neu-button px-4 py-1 font-bold transition-all">Delivered</button>
+                                <button class="bg-primary text-white neu-border neu-shadow neu-button px-4 py-1 font-bold transition-all">Issue</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white neu-border neu-shadow p-4 rounded-lg">
+                        <div class="flex justify-between items-center mb-2">
+                            <div>
+                                <span class="font-bold">Order #45695</span>
+                                <span class="ml-2 text-sm text-gray-500">Today, 2:45 PM</span>
+                            </div>
+                            <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm">Assigned</span>
+                        </div>
+                        <div class="flex mb-3 items-center">
+                            <div class="mr-3 bg-primary neu-border rounded-full w-12 h-12 flex items-center justify-center text-white">
+                                <i class="bi bi-geo-alt text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium">456 Park Ave, Suite 10</p>
+                                <p class="text-gray-600">New York, NY 10022</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="bg-accent text-dark neu-border neu-shadow neu-button px-4 py-1 font-bold transition-all">Navigate</button>
+                            <div class="space-x-2">
+                                <button class="bg-green-400 text-dark neu-border neu-shadow neu-button px-4 py-1 font-bold transition-all">Delivered</button>
+                                <button class="bg-primary text-white neu-border neu-shadow neu-button px-4 py-1 font-bold transition-all">Issue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="bg-white neu-border neu-shadow p-6 rounded-lg w-11/12 max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Login</h2>
+                <button onclick="closeModal('loginModal')" class="text-2xl">&times;</button>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block mb-1 font-bold">Email</label>
+                    <input type="email" placeholder="your@email.com" class="w-full p-3 neu-border rounded" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-bold">Password</label>
+                    <input type="password" placeholder="••••••••" class="w-full p-3 neu-border rounded" required>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="remember" class="mr-2 neu-border">
+                    <label for="remember">Remember me</label>
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-primary text-white neu-border neu-shadow neu-button py-3 font-bold transition-all">Login</button>
+                </div>
+            </form>
+            <div class="mt-4 text-center">
+                <p class="mb-2">
+                    <a href="#" onclick="showModal('resetPasswordModal')" class="text-primary font-bold">Forgot password?</a>
+                </p>
+                <p>
+                    Don't have an account? 
+                    <a href="#" onclick="showModal('registerModal'); closeModal('loginModal')" class="text-primary font-bold">Sign up</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="modal">
+        <div class="bg-white neu-border neu-shadow p-6 rounded-lg w-11/12 max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Create Account</h2>
+                <button onclick="closeModal('registerModal')" class="text-2xl">&times;</button>
+            </div>
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <label class="block mb-1 font-bold">Full Name</label>
+                    <input type="text" placeholder="John Doe" class="w-full p-3 neu-border rounded" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-bold">Email</label>
+                    <input type="email" placeholder="your@email.com" class="w-full p-3 neu-border rounded" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-bold">Password</label>
+                    <input type="password" placeholder="••••••••" class="w-full p-3 neu-border rounded" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-bold">Confirm Password</label>
+                    <input type="password" placeholder="••••••••" class="w-full p-3 neu-border rounded" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-bold">Account Type</label>
+                    <select class="w-full p-3 neu-border rounded" required>
+                        <option value="customer">Customer</option>
+                        <option value="seller">Seller</option>
+                        <option value="delivery">Delivery Partner</option>
+                    </select>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" id="terms" class="mr-2 neu-border" required>
+                    <label for="terms">I agree to the Terms and Conditions</label>
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-primary text-white neu-border neu-shadow neu-button py-3 font-bold transition-all">Create Account</button>
+                </div>
+            </form>
+            <div class="mt-4 text-center">
+                <p>
+                    Already have an account? 
+                    <a href="#" onclick="showModal('loginModal'); closeModal('registerModal')" class="text-primary font-bold">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal">
+        <div class="bg-white neu-border neu-shadow p-6 rounded-lg w-11/12 max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Your Cart</h2>
+                <button onclick="closeModal('cartModal')" class="text-2xl">&times;</button>
+            </div>
+            <div id="cartItems" class="space-y-4 max-h-96 overflow-y-auto no-scrollbar">
+                <!-- Cart items will be inserted here -->
+                <div class="text-center p-8 text-gray-500">
+                    Your cart is empty
+                </div>
+            </div>
+            <div class="mt-6 pt-4 border-t-2 border-gray-200">
+                <div class="flex justify-between mb-2">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal">$0.00</span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <span>Shipping:</span>
+                    <span id="cartShipping">$0.00</span>
+                </div>
+                <div class="flex justify-between mb-4 font-bold">
+                    <span>Total:</span>
+                    <span id="cartTotal">$0.00</span>
+                </div>
+                <button id="checkoutBtn" class="w-full bg-green-400 text-dark neu-border neu-shadow neu-button py-3 font-bold transition-all mb-2" onclick="showModal('checkoutModal'); closeModal('cartModal')">Checkout</button>
+                <button class="w-full bg-white text-dark neu-border neu-shadow neu-button py-3 font-bold transition-all" onclick="closeModal('cartModal')">Continue Shopping</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="modal">
+        <div class="bg-white neu-border neu-shadow p-6 rounded-lg w-11/12 max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Checkout</h2>
+                <button onclick="closeModal('checkoutModal')" class="text-2xl">&times;</button>
+            </div>
+            <form id="checkoutForm" class="space-y-4">
+                <h3 class="font-bold text-lg">Shipping Address</h3>
+                <div>
+                    <label class="block mb-1 font-bold">Full Name</label>
+                    <input type="text" placeholder="John Doe" class="w-full p-3 neu-border rounded" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-bold">Address</label>
+                    <input type="text" placeholder="123 Main St" class="w-full p-3 neu-border rounded" required>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1 font-bold">City</label>
+                        <input type="text" placeholder="New York" class="w-full p-3 neu-border rounded" required>
+                    </div>
+                    <div>
+                        <label class="block mb-1 font-bold">Zip Code</label>
+                        <input type="text" placeholder="10001" class="w-full p-3 neu-border rounded" required>
+                    </div>
+                </div>
+                
+                <h3 class="font-bold text-lg mt-6">Payment Method</h3>
+                <div class="space-y-2">
+                    <div class="flex items-center p-3 neu-border rounded">
+                        <input type="radio" id="cardPayment" name="paymentMethod" class="mr-2" checked>
+                        <label for="cardPayment" class="flex-grow">Credit/Debit Card</label>
+                        <div class="flex space-x-2">
+                            <i class="bi bi-credit-card"></i>
+                            <i class="bi bi-credit-card-2-front"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center p-3 neu-border rounded">
+                        <input type="radio" id="upiPayment" name="paymentMethod" class="mr-2">
+                        <label for="upiPayment" class="flex-grow">UPI</label>
+                        <i class="bi bi-phone"></i>
+                    </div>
+                    <div class="flex items-center p-3 neu-border rounded">
+                        <input type="radio" id="cashPayment" name="paymentMethod" class="mr-2">
+                        <label for="cashPayment" class="flex-grow">Cash on Delivery</label>
+                        <i class="bi bi-cash"></i>
+                    </div>
+                </div>
+                
+                <div id="cardDetails" class="space-y-4">
+                    <div>
+                        <label class="block mb-1 font-bold">Card Number</label>
+                        <input type="text" placeholder="1234 5678 9012 3456" class="w-full p-3 neu-border rounded" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block mb-1 font-bold">Expiry Date</label>
+                            <input type="text" placeholder="MM/YY" class="w-full p-3 neu-border rounded" required>
+                        </div>
+                        <div>
+                            <label class="block mb-1 font-bold">CVV</label>
+                            <input type="text" placeholder="123" class="w-full p-3 neu-border rounded" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 pt-4 border-t-2 border-gray-200">
+                    <div class="flex justify-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>$0.00</span>
+                    </div>
+                    <div class="flex justify-between mb-2">
+                        <span>Shipping:</span>
+                        <span>$0.00</span>
+                    </div>
+                    <div class="flex justify-between mb-4 font-bold">
+                        <span>Total:</span>
+                        <span>$0.00</span>
+                    </div>
+                    <button type="submit" class="w-full bg-green-400 text-dark neu-border neu-shadow neu-button py-3 font-bold transition-all">Place Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Account Modal -->
+    <div id="accountModal" class="modal">
+        <div class="bg-white neu-border neu-shadow p-6 rounded-lg w-11/12 max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Account</h2>
+                <button onclick="closeModal('accountModal')" class="text-2xl">&times;</button>
+            </div>
+            <div id="accountOptions" class="space-y-3">
+                <button onclick="showPanel('userPanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center">
+                    <i class="bi bi-house mr-3"></i> Home
+                </button>
+                <button onclick="showPanel('profilePanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center">
+                    <i class="bi bi-person mr-3"></i> My Profile
+                </button>
+                <button onclick="showPanel('orderHistoryPanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center">
+                    <i class="bi bi-bag mr-3"></i> My Orders
+                </button>
+                <button onclick="showPanel('wishlistPanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center">
+                    <i class="bi bi-heart mr-3"></i> Wishlist
+                </button>
+                <button onclick="showModal('savedAddressesModal'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center">
+                    <i class="bi bi-geo-alt mr-3"></i> Saved Addresses
+                </button>
+                <button onclick="showModal('paymentMethodsModal'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center">
+                    <i class="bi bi-credit-card mr-3"></i> Payment Methods
+                </button>
+                <div id="roleBasedOptions">
+                    <!-- For admin -->
+                    <button onclick="showPanel('adminPanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center bg-accent">
+                        <i class="bi bi-shield-lock mr-3"></i> Admin Dashboard
+                    </button>
+                    <!-- For seller -->
+                    <button onclick="showPanel('sellerPanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center bg-secondary">
+                        <i class="bi bi-shop mr-3"></i> Seller Dashboard
+                    </button>
+                    <!-- For delivery partner -->
+                    <button onclick="showPanel('deliveryPanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center bg-primary text-white">
+                        <i class="bi bi-truck mr-3"></i> Delivery Dashboard
+                    </button>
+                </div>
+                <button onclick="logout()" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center">
+                    <i class="bi bi-box-arrow-right mr-3"></i> Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addProductModal" class="modal">
+        <div class="bg-white neu-border neu-shadow p-6 rounded-lg w-11/12 max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Add New Product</h2>
+                <button onclick="closeModal('addProductModal')" class="text-2xl">&times;</button>
+            </div>
+            <form id="addProductForm" class="space-y-4">
+                <div>
+                    <label class="block mb-1 font-bold">Product Name</label>
+                    <input type="text" placeholder="Enter product name" class="w-full p-3 neu-border rounded" required>
+                </div>
+                <div>
+                    <label class="block mb-1 font-bold">Description</label>
+                    <textarea placeholder="Enter product description" class="w-full p-3 neu-border rounded" rows="3" required></textarea>
+                </div>
+                <div>
+                    <label class="block mb-1 font-bold">Category</label>
+                    <select class="w-full p-3 neu-border rounded" required>
+                        <option value="">Select category</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="home">Home & Kitchen</option>
+                        <option value="beauty">Beauty & Personal Care</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1 font-bold">Price</label>
+                        <input type="number" placeholder="0.00" class="w-full p-3 neu-border rounded" required>
+                    </div>
+                    <div>
+                        <label class="block mb-1 font-bold">Stock</label>
+                        <input type="number" placeholder="0" class="w-full p-3 neu-border rounded" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-1 font-bold">Product Images</label>
+                    <div class="border-dashed neu-border p-8 rounded text-center cursor-pointer">
+                        <i class="bi bi-cloud-arrow-up text-3xl"></i>
+                        <p>Click to upload or drag images here</p>
+                    </div>
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-green-400 text-dark neu-border neu-shadow neu-button py-3 font-bold transition-all">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Categories Modal -->
+    <div id="categoriesModal" class="modal">
+        <div class="bg-white neu-border neu-shadow p-6 rounded-lg w-11/12 max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Categories</h2>
+                <button onclick="closeModal('categoriesModal')" class="text-2xl">&times;</button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button class="p-4 neu-border neu-shadow neu-button transition-all bg-accent">
+                    <i class="bi bi-phone text-3xl"></i>
+                    <p class="mt-2 font-bold">Electronics</p>
+                </button>
+                <button class="p-4 neu-border neu-shadow neu-button transition-all bg-primary text-white">
+                    <i class="bi bi-shirt text-3xl"></i>
+                    <p class="mt-2 font-bold">Fashion</p>
+                </button>
+                <button class="p-4 neu-border neu-shadow neu-button transition-all bg-secondary">
+                    <i class="bi bi-house text-3xl"></i>
+                    <p class="mt-2 font-bold">Home & Kitchen</p>
+                </button>
+                <button class="p-4 neu-border neu-shadow neu-button transition-all bg-green-400">
+                    <i class="bi bi-basket text-3xl"></i>
+                    <p class="mt-2 font-bold">Grocery</p>
+                </button>
+                <button class="p-4 neu-border neu-shadow neu-button transition-all bg-red-300">
+                    <i class="bi bi-heart-pulse text-3xl"></i>
+                    <p class="mt-2 font-bold">Health & Beauty</p>
+                </button>
+                <button class="p-4 neu-border neu-shadow neu-button transition-all bg-purple-300">
+                    <i class="bi bi-controller text-3xl"></i>
+                    <p class="mt-2 font-bold">Toys & Games</p>
+                </button>
+                <button class="p-4 neu-border neu-shadow neu-button transition-all bg-yellow-300">
+                    <i class="bi bi-book text-3xl"></i>
+                    <p class="mt-2 font-bold">Books</p>
+                </button>
+                <button class="p-4 neu-border neu-shadow neu-button transition-all bg-blue-300">
+                    <i class="bi bi-tools text-3xl"></i>
+                    <p class="mt-2 font-bold">Sports & Outdoors</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="modal">
+        <div class="bg-white neu-border neu-shadow p-6 rounded-lg w-11/12 max-w-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold">Search</h2>
+                <button onclick="closeModal('searchModal')" class="text-2xl">&times;</button>
+            </div>
+            <div class="relative mb-4">
+                <input type="text" placeholder="Search products..." class="w-full p-3 ps-10 neu-border rounded">
+                <i class="bi bi-search absolute left-3 top-3 text-gray-500"></i>
+            </div>
+            <div class="mb-4">
+                <h3 class="font-bold mb-2">Recent Searches</h3>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between p-2 hover:bg-gray-100 rounded">
+                        <span>Smartphone</span>
+                        <button class="text-gray-500"><i class="bi bi-x"></i></button>
+                    </div>
+                    <div class="flex items-center justify-between p-2 hover:bg-gray-100 rounded">
+                        <span>Headphones</span>
+                        <button class="text-gray-500"><i class="bi bi-x"></i></button>
+                    </div>
+                    <div class="flex items-center justify-between p-2 hover:bg-gray-100 rounded">
+                        <span>Backpack</span>
+                        <button class="text-gray-500"><i class="bi bi-x"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 class="font-bold mb-2">Popular Categories</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Electronics</span>
+                    <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Fashion</span>
+                    <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Home</span>
+                    <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Beauty</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample products data
+        let products = [
+            { id: 1, name: "Smartphone X", price: 499.99, image: "https://source.unsplash.com/random/300x300/?smartphone", category: "electronics", rating: 4.5, stock: 15 },
+            { id: 2, name: "Wireless Headphones", price: 149.99, image: "https://source.unsplash.com/random/300x300/?headphones", category: "electronics", rating: 4.2, stock: 8 },
+            { id: 3, name: "Smart Watch", price: 199.99, image: "https://source.unsplash.com/random/300x300/?smartwatch", category: "electronics", rating: 4.0, stock: 12 },
+            { id: 4, name: "Cotton T-Shirt", price: 24.99, image: "https://source.unsplash.com/random/300x300/?tshirt", category: "fashion", rating: 4.3, stock: 25 },
+            { id: 5, name: "Denim Jeans", price: 59.99, image: "https://source.unsplash.com/random/300x300/?jeans", category: "fashion", rating: 4.1, stock: 18 },
+            { id: 6, name: "Canvas Backpack", price: 39.99, image: "https://source.unsplash.com/random/300x300/?backpack", category: "fashion", rating: 4.4, stock: 10 }
+        ];
+
+        // App state
+        let cart = [];
+        let wishlist = [];
+        let currentPanel = 'userPanel';
+        let isLoggedIn = false;
+        let userRole = 'customer'; // can be 'admin', 'seller', 'delivery' or 'customer'
+
+        // DOM utility functions
+        function showPanel(panelId) {
+            // Hide all panels
+            document.querySelectorAll('[id$="Panel"]').forEach(panel => {
+                panel.classList.add('hidden');
+            });
+            
+            // Show requested panel
+            document.getElementById(panelId).classList.remove('hidden');
+            currentPanel = panelId;
+            
+            // Close mobile menu if open
+            closeModal('accountModal');
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Product functions
+        function displayProducts() {
+            const productsList = document.getElementById('productsList');
+            productsList.innerHTML = products.map(product => `
+                <div class="bg-white neu-border neu-shadow p-4 rounded-lg">
+                    <div class="relative mb-3">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded">
+                        <button class="absolute top-2 right-2 bg-white rounded-full p-2 neu-border" onclick="toggleWishlist(${product.id})">
+                            <i class="bi bi-heart${wishlist.includes(product.id) ? '-fill text-primary' : ''}"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-1">${product.name}</h3>
+                        <div class="flex items-center mb-2">
+                            ${"★".repeat(Math.floor(product.rating))}${"☆".repeat(5-Math.floor(product.rating))}
+                            <span class="ml-1 text-sm text-gray-600">(${product.rating})</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-lg">$${product.price}</span>
+                            <button class="bg-primary text-white neu-border neu-shadow neu-button px-3 py-1 font-bold transition-all" onclick="addToCart(${product.id})">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Cart functions
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({...product, quantity: 1});
+            }
+            
+            updateCartCount();
+            updateCartModal();
+            
+            // Show notification
+            showNotification(`Added ${product.name} to cart`);
+        }
+
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = totalItems;
+        }
+
+        function updateCartModal() {
+            const cartItems = document.getElementById('cartItems');
+            const cartSubtotal = document.getElementById('cartSubtotal');
+            const cartShipping = document.getElementById('cartShipping');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = `<div class="text-center p-8 text-gray-500">Your cart is empty</div>`;
+                cartSubtotal.textContent = '$0.00';
+                cartShipping.textContent = '$0.00';
+                cartTotal.textContent = '$0.00';
+                return;
+            }
+            
+            cartItems.innerHTML = cart.map(item => `
+                <div class="flex neu-border p-3 rounded">
+                    <img src="${item.image}" alt="${item.name}" class="w-20 h-20 object-cover rounded mr-3">
+                    <div class="flex-grow">
+                        <div class="flex justify-between">
+                            <h4 class="font-bold">${item.name}</h4>
+                            <button onclick="removeFromCart(${item.id})"><i class="bi bi-x"></i></button>
+                        </div>
+                        <p class="text-gray-600">$${item.price}</p>
+                        <div class="flex items-center mt-2">
+                            <button class="w-8 h-8 flex items-center justify-center neu-border neu-button" onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                            <span class="mx-3">${item.quantity}</span>
+                            <button class="w-8 h-8 flex items-center justify-center neu-border neu-button" onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            const shipping = subtotal > 0 ? 10.00 : 0;
+            const total = subtotal + shipping;
+            
+            cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
+            cartShipping.textContent = `$${shipping.toFixed(2)}`;
+            cartTotal.textContent = `$${total.toFixed(2)}`;
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartCount();
+            updateCartModal();
+        }
+
+        function updateQuantity(productId, newQuantity) {
+            if (newQuantity <= 0) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity = newQuantity;
+                updateCartCount();
+                updateCartModal();
+            }
+        }
+
+        // Wishlist functions
+        function toggleWishlist(productId) {
+            const index = wishlist.indexOf(productId);
+            
+            if (index === -1) {
+                wishlist.push(productId);
+                showNotification('Added to wishlist');
+            } else {
+                wishlist.splice(index, 1);
+                showNotification('Removed from wishlist');
+            }
+            
+            updateWishlistPanel();
+        }
+
+        function updateWishlistPanel() {
+            const wishlistItems = document.getElementById('wishlistItems');
+            
+            if (wishlist.length === 0) {
+                wishlistItems.innerHTML = `<div class="text-center p-8 col-span-full text-gray-500">Your wishlist is empty</div>`;
+                return;
+            }
+            
+            wishlistItems.innerHTML = products
+                .filter(product => wishlist.includes(product.id))
+                .map(product => `
+                    <div class="bg-white neu-border neu-shadow p-4 rounded-lg">
+                        <div class="relative mb-3">
+                            <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded">
+                            <button class="absolute top-2 right-2 bg-white rounded-full p-2 neu-border" onclick="toggleWishlist(${product.id})">
+                                <i class="bi bi-heart-fill text-primary"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-lg mb-1">${product.name}</h3>
+                            <div class="flex justify-between items-center">
+                                <span class="font-bold text-lg">$${product.price}</span>
+                                <button class="bg-primary text-white neu-border neu-shadow neu-button px-3 py-1 font-bold transition-all" onclick="addToCart(${product.id})">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        // Authentication functions
+        function login(email, password, role = 'customer') {
+            // Simulate login
+            isLoggedIn = true;
+            userRole = role;
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userRole', role);
+            
+            updateUIForLoggedInUser();
+            closeModal('loginModal');
+            showNotification('Successfully logged in');
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            userRole = 'customer';
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userRole');
+            
+            updateUIForLoggedOutUser();
+            showPanel('userPanel');
+            closeModal('accountModal');
+            showNotification('Successfully logged out');
+        }
+
+        function updateUIForLoggedInUser() {
+            // Update role-based options visibility
+            updateRoleBasedOptions();
+        }
+
+        function updateUIForLoggedOutUser() {
+            // Reset UI elements for logged out state
+        }
+
+        function updateRoleBasedOptions() {
+            const roleBasedOptions = document.getElementById('roleBasedOptions');
+            
+            // Show only appropriate dashboard button based on user role
+            roleBasedOptions.innerHTML = '';
+            
+            if (userRole === 'admin') {
+                roleBasedOptions.innerHTML += `
+                    <button onclick="showPanel('adminPanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center bg-accent">
+                        <i class="bi bi-shield-lock mr-3"></i> Admin Dashboard
+                    </button>
+                `;
+            } else if (userRole === 'seller') {
+                roleBasedOptions.innerHTML += `
+                    <button onclick="showPanel('sellerPanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center bg-secondary">
+                        <i class="bi bi-shop mr-3"></i> Seller Dashboard
+                    </button>
+                `;
+            } else if (userRole === 'delivery') {
+                roleBasedOptions.innerHTML += `
+                    <button onclick="showPanel('deliveryPanel'); closeModal('accountModal')" class="w-full text-left p-3 neu-border neu-shadow neu-button transition-all flex items-center bg-primary text-white">
+                        <i class="bi bi-truck mr-3"></i> Delivery Dashboard
+                    </button>
+                `;
+            }
+        }
+
+        // UI Utility functions
+        function showNotification(message) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'fixed bottom-4 right-4 bg-dark text-white neu-border p-4 rounded-lg z-50 transition-opacity duration-300';
+            notification.textContent = message;
+            
+            // Add to DOM
+            document.body.appendChild(notification);
+            
+            // Remove after delay
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Event listeners
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+            const password = e.target.querySelector('input[type="password"]').value;
+            login(email, password);
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const accountType = e.target.querySelector('select').value;
+            login('new@user.com', 'password', accountType);
+        });
+
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            closeModal('checkoutModal');
+            cart = [];
+            updateCartCount();
+            showNotification('Order placed successfully!');
+        });
+
+        document.getElementById('cartBtn').addEventListener('click', function() {
+            showModal('cartModal');
+            updateCartModal();
+        });
+
+        // Initialize the app
+        function initApp() {
+            // Add products to the home page
+            const productsList = document.getElementById('productsList');
+            productsList.innerHTML = products.map(product => `
+                <div class="bg-white neu-border neu-shadow p-4 rounded-lg">
+                    <div class="relative mb-3">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-48 object-cover rounded">
+                        <button class="absolute top-2 right-2 bg-white rounded-full p-2 neu-border" onclick="toggleWishlist(${product.id})">
+                            <i class="bi bi-heart${wishlist.includes(product.id) ? '-fill text-primary' : ''}"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-1">${product.name}</h3>
+                        <div class="flex items-center mb-2">
+                            ${"★".repeat(Math.floor(product.rating))}${"☆".repeat(5-Math.floor(product.rating))}
+                            <span class="ml-1 text-sm text-gray-600">(${product.rating})</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-lg">$${product.price}</span>
+                            <button class="bg-primary text-white neu-border neu-shadow neu-button px-3 py-1 font-bold transition-all" onclick="addToCart(${product.id})">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Check for stored login status
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                isLoggedIn = true;
+                userRole = localStorage.getItem('userRole') || 'customer';
+                updateUIForLoggedInUser();
+            }
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', (e) => {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
